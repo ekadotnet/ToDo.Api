@@ -12,6 +12,7 @@ namespace ToDo.Api
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                //.UseKestrel() można pobawić się Kestrelem, ale polecam najpierw nieco o nim poczytać :)
                 .UseStartup<Startup>()
                 .Build();
     }

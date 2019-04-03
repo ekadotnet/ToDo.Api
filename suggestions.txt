@@ -1,0 +1,13 @@
+Co mozna zrobic, zeby sie do nastepnych zajec nie nudzic:
+	- odpalic projekt, pobawic sie swaggerem (domyslny endpoint: http://localhost:jakisport/swagger):
+		- zobaczyc, co daja atrybuty uzyte na metodach w kontrolerze
+		- przetestowac "strzelanie" do api z poziomu swaggera
+		- zobaczyc, w jakim formacie prezentowane ss dane o kazdej z metod
+	- zmodyfikowac typ Example, dodac nowe property, zmienic typy propert (oraz zobaczyc jak zareaguje na to swagger)
+	- zmodyfikowac istniejace metody GETowe (opatrzone atrybutem [HttpGet]) - zmienic typ zwracany, dodac jakies walidacje, cokolwiek Wam siê spodoba
+	- pokombinowac z konfiguracja swaggera (np. sprobowac go "zepsuc" i sprawdzic dlaczego tak sie stalo)
+
+Dla super chetnych (ja sie zwykle do takich nie zaliczam, wiec ez):
+	- dodac kolejny kontroler razem z jakimis metodami (moga byc dowolne) i zobaczyc co sie stanie w swaggerze
+		(tutaj nalezy pamietac, aby kontroler byl opatrzony atrybutem [Route], a metody atrybutami [HttpX], gdzie X to jakas metoda http)
+		((ctrl c/v z ValuesController zadziala, tylko pozmieniajcie nazwy i Route XD))
