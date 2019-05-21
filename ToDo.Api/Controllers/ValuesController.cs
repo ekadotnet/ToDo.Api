@@ -1,11 +1,18 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using ToDo.Core.Interfaces;
 
 namespace ToDo.Api.Controllers
 {
     [Route("api/values")]
     public class ValuesController : Controller
     {
+        private readonly IToDoTaskService _toDoTaskService;
+        public ValuesController(IToDoTaskService toDoTaskService)
+        {
+            _toDoTaskService = toDoTaskService;
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()

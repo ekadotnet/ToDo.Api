@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ToDo.Data.Context;
 
@@ -14,14 +16,27 @@ namespace ToDo.Data
             _toDoContext = toDoContext;
         }
 
+
+
+
+        public IEnumerable<T> Get()
+        {
+            return _toDoContext.Set<T>().ToList();
+        }
+
+        
+
         public T Add(T entity)
         {
+            
             _toDoContext.Set<T>().Add(entity);
             _toDoContext.SaveChanges();
 
             return entity;
         }
+
         
+
         public T Update(T entity)
         {
             _toDoContext.Set<T>().Update(entity);
