@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using ToDo.Core.Dtos;
 using ToDo.Data;
 using ToDo.Data.Models;
 using ToDo.Core.Interfaces;
-using ToDo.Data.Dtos;
+
 
 namespace ToDo.Core.Services
 {

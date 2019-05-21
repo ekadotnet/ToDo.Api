@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ToDo.Data.Dtos;
+using ToDo.Core.Dtos;
+
 using ToDo.Data.Models;
 
 namespace ToDo.Core.Interfaces

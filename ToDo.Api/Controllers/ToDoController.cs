@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ToDo.Core.Dtos;
 using ToDo.Core.Interfaces;
-using ToDo.Data.Dtos;
-using ToDo.Data.Models;
+
 
 
 namespace ToDo.Api.Controllers
@@ -25,7 +25,7 @@ namespace ToDo.Api.Controllers
         {
             return new JsonResult(_toDoTaskServices.GetTasks());
         }
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             var taskDto = _toDoTaskServices.GetTask(id);
