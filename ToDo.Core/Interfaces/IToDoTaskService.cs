@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ToDo.Core.Dtos;
+
 using ToDo.Data.Models;
 
 namespace ToDo.Core.Interfaces
 {
     public interface IToDoTaskService
     {
-        void Add(ToDoTask toDoTask);
-        void Update(ToDoTask toDoTask);
-        void Delete(ToDoTask toDoTask);
+        IEnumerable<ShowTaskDto> GetTasks();
+        ShowTaskDto GetTask(int id);
+        void Add(AddTaskDto addTaskDto);
+        void Update(UpdateTaskDto updateTaskDto);
+        void Delete(DeleteTaskDto deleteTaskDto);
     }
 }

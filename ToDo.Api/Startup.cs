@@ -6,6 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using Alexinea.Autofac.Extensions.DependencyInjection;
+using ToDo.Core.Interfaces;
+using ToDo.Core.Modules;
+using ToDo.Core.Services;
 using ToDo.Data.Context;
 
 namespace ToDo.Api
@@ -23,21 +27,29 @@ namespace ToDo.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddAutofac();
+            
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+
             services.AddDbContext<ToDoContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
         }
 
-        public void ContainerServices(ContainerBuilder builder)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
             builder.RegisterAssemblyModules(assemblies);
+            // builder.RegisterModule(new ToDoTaskModule());
         }
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -55,5 +67,7 @@ namespace ToDo.Api
 
             app.UseMvc();
         }
+
+        
     }
 }
