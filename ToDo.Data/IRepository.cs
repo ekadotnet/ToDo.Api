@@ -9,6 +9,6 @@ namespace ToDo.Data
         IEnumerable<T> Get();
         T Add(T entity);
         T Update(T entity);
-        T Delete(T entity);
+        bool Delete(int entity);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ToDo.Data.Context;
+using ToDo.Data.Dtos;
 
 namespace ToDo.Data
 {
@@ -45,15 +46,20 @@ namespace ToDo.Data
             return entity;
         }
 
-        public T Delete(T entity)
+        public bool Delete(int entity)
         {
-            _toDoContext.Set<T>().Remove(entity);
-            _toDoContext.SaveChanges();
+            var task = _toDoContext.ToDoTasks.FirstOrDefault(x => x.Id == entity);
 
-            return entity;
+            if (task == null)
+            {
+                return false;
+            }
+
+            _toDoContext.ToDoTasks.Remove(task);
+            var result = _toDoContext.SaveChanges();
+
+            return result > 0;
         }
-
-
 
     }
 }
