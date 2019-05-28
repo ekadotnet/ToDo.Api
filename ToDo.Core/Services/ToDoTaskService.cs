@@ -95,7 +95,7 @@ namespace ToDo.Core.Services
                 IsCompleted = deleteTaskDto.IsCompleted,
                 Name = deleteTaskDto.Name
             };
-            _repository.Delete(task);
+            _repository.Delete(task.Id);
         }
     }
 }
