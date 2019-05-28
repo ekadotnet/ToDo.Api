@@ -1,67 +1,91 @@
 import React from "react";
 import { Card, Button, Form } from "react-bootstrap";
-import axios from "axios";
 import "./style.css";
+import axios from "axios";
+import ModalComponent from "../modalComponent/index";
 
 export default class TasksComponent extends React.Component {
   constructor() {
     super();
     this.state = {
-      tasks: [
-        {
-          name: "Buy beer and onions",
-          description:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum ex quis, quidem enim nobis laudantium dolores, debitis eos odio cum voluptas hic possimus impedit? Obcaecati rerum aut exercitationem expedita voluptatum?"
-        }
-      ],
+      tasks: [],
       newTaskName: "",
-      newTaskDescription: ""
+      newTaskDescription: "",
+      validated: false,
+      isFormValidated: false,
+      modalShow: false,
+      taskToModal: {}
     };
   }
 
+  //Po zamontowaniu komponentu
   componentDidMount() {
     this.getTasks();
   }
 
-  getTasks = () => {
-    axios.get("/toDo").then(response => {
-      console.log(response);
+  //Ściąga wszystkie taski z backendu
+  getTasks() {
+    axios.get("/todo").then(res => {
+      console.log(res);
       this.setState({
-        tasks: response.data
+        tasks: res.data
       });
     });
+  }
+
+  //Dodaje nowy task - w metodzie post jako pierwszy parametr "/todo", ponieważ
+  // w package.json mamy proxy "http://localhost:2573/api", a więc to jest pozostała część.
+  //Następnym parameterm jest obiekt z właściwościami "name" i "description" - takie same nazwy jakie przyjmuje backend
+  addNewTask = e => {
+    axios
+      .post("/todo", {
+        name: this.state.newTaskName,
+        description: this.state.newTaskDescription
+      }) //jeśli zakończyłeś dodawanie taska, pobierz wszysktkie i odśwież wlistę tasków
+      .then(() => {
+        this.getTasks();
+      });
   };
 
+  //Metoda się wykona z każdą zmianą w inpucie.  [e.target.name] odpowiada nazwie podanej pod "name" w Form.Control, np. name="newTaskName"
+  onChange = e => {
+    console.log(e.target);
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  //Renderuje, generuje każdą kartę po kolei. Jeśli opis jest dłuższy niż 100 słów, skraca go i dodaje trzy kropki - "..."
   renderCard = (task, k) => {
+    if (task.description.length > 100) {
+      var taskShortDescription = task.description.substring(0, 100);
+    }
+
     return (
-      <Card key={k} style={{ width: "18rem" }}>
-        <Card.Body>
+      <Card
+        key={k} //szerokośc 18rem, wysokość jest automatyczna, margines 1rem, kursor po najechani ma być taki jak przy klikaniu
+        style={{ width: "18rem", margin: "1rem", cursor: "pointer" }}
+        onClick={() => {
+          this.setState({ modalShow: true, taskToModal: task });
+        }}
+      >
+        <Card.Header>
           <Card.Title>{task.name}</Card.Title>
-          <Card.Text>{task.description}</Card.Text>
+        </Card.Header>
+        <Card.Body>
+          <Card.Text>
+            {taskShortDescription
+              ? taskShortDescription + "..."
+              : task.description}
+          </Card.Text>
         </Card.Body>
       </Card>
     );
   };
 
-  addNewTask = () => {
-    axios.post("/toDo", {
-      name: this.state.newTaskName,
-      description: this.state.newTaskDescription
-    });
-    this.getTasks();
-  };
-
-  onChange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-    console.log("tutaj:");
-    console.log(this.state);
-  };
-
   render() {
-    let tasks = this.state.tasks
-      .slice(0)
+    let modalClose = () => this.setState({ modalShow: false });
+
+    const tasks = this.state.tasks
+      .slice(0) //odwracanie tablicy, żeby było od najnowszego taska do najstarszego
       .reverse()
       .map((val, index) => {
         return this.renderCard(val, index);
@@ -69,41 +93,50 @@ export default class TasksComponent extends React.Component {
 
     return (
       <div id="tasksPage">
-        <div>{tasks}</div>
-        <div>
-          <Form>
+        <div id="tasks">{tasks}</div>
+        <div id="newTask">
+          <h1>Add new task:</h1>
+          <Form
+            id="newTaskForm"
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+          >
             <Form.Group>
-              <Form.Label>Task name:</Form.Label>
+              <Form.Label>Name:</Form.Label>
               <Form.Control
+                type="text"
+                placeholder="Enter name"
                 name="newTaskName"
                 onChange={this.onChange}
-                type="text"
-                placeholder="Enter task name"
+                required
               />
             </Form.Group>
 
             <Form.Group>
-              <Form.Label>Task description:</Form.Label>
+              <Form.Label>Description:</Form.Label>
               <Form.Control
+                as="textarea"
+                rows="5"
                 name="newTaskDescription"
                 onChange={this.onChange}
-                as="textarea"
-                rows="3"
               />
             </Form.Group>
-
             <Button
+              variant="primary"
               disabled={this.state.newTaskName === ""}
               onClick={this.addNewTask}
-              variant="primary"
             >
               Submit
             </Button>
           </Form>
+          <ModalComponent
+            task={this.state.taskToModal}
+            show={this.state.modalShow}
+            onHide={modalClose}
+          />
         </div>
       </div>
     );
   }
 }
-
-//{this.state.tasks[0]}
