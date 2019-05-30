@@ -18,8 +18,6 @@ namespace ToDo.Data
         }
 
 
-
-
         public IEnumerable<T> Get()
         {
             return _toDoContext.Set<T>().ToList();

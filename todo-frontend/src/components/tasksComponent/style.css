@@ -5,8 +5,25 @@
     margin-top: 2%;
     }
     
-    #tasks{
-        display: grid;
-        grid-gap: 1rem;
-        justify-items: center;
-    }
+#tasks{
+    display: grid;
+    grid-gap: 1rem;
+    justify-items: center;
+}
+
+.card-header {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+}
+
+.card-body {
+    cursor: pointer;
+}
+
+.card-title {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}

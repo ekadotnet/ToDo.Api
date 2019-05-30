@@ -13,6 +13,6 @@ namespace ToDo.Core.Interfaces
         ShowTaskDto GetTask(int id);
         void Add(AddTaskDto addTaskDto);
         void Update(UpdateTaskDto updateTaskDto);
-        void Delete(DeleteTaskDto deleteTaskDto);
+        void Delete(int id);
     }
 }

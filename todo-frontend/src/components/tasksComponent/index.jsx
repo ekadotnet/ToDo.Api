@@ -14,7 +14,7 @@ export default class TasksComponent extends React.Component {
       validated: false,
       isFormValidated: false,
       modalShow: false,
-      taskToModal: {}
+      taskToModal: {},
     };
   }
 
@@ -26,13 +26,19 @@ export default class TasksComponent extends React.Component {
   //Ściąga wszystkie taski z backendu
   getTasks() {
     axios.get("/todo").then(res => {
-      console.log(res);
       this.setState({
         tasks: res.data
       });
     });
   }
 
+  deleteTask = id => {
+    axios
+    .delete(`/todo/${id}`)
+    .then(() => {
+        this.getTasks();
+    });
+  }
   //Dodaje nowy task - w metodzie post jako pierwszy parametr "/todo", ponieważ
   // w package.json mamy proxy "http://localhost:2573/api", a więc to jest pozostała część.
   //Następnym parameterm jest obiekt z właściwościami "name" i "description" - takie same nazwy jakie przyjmuje backend
@@ -47,9 +53,11 @@ export default class TasksComponent extends React.Component {
       });
   };
 
+
   //Metoda się wykona z każdą zmianą w inpucie.  [e.target.name] odpowiada nazwie podanej pod "name" w Form.Control, np. name="newTaskName"
   onChange = e => {
     console.log(e.target);
+    
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -58,23 +66,23 @@ export default class TasksComponent extends React.Component {
     if (task.description.length > 100) {
       var taskShortDescription = task.description.substring(0, 100);
     }
-
     return (
       <Card
         key={k} //szerokośc 18rem, wysokość jest automatyczna, margines 1rem, kursor po najechani ma być taki jak przy klikaniu
-        style={{ width: "18rem", margin: "1rem", cursor: "pointer" }}
-        onClick={() => {
-          this.setState({ modalShow: true, taskToModal: task });
-        }}
+        style={{ width: "18rem", margin: "1rem"}}
       >
-        <Card.Header>
-          <Card.Title>{task.name}</Card.Title>
+        <Card.Header className='card-header'>
+          <Card.Title className='card-title'>{task.name}</Card.Title>
+          <Button variant="danger" onClick={() => {this.deleteTask(task.id)}}>X</Button>
         </Card.Header>
-        <Card.Body>
+        <Card.Body className='card-body' onClick={() => {
+          this.setState({ modalShow: true, taskToModal: task });
+        }}>
           <Card.Text>
             {taskShortDescription
               ? taskShortDescription + "..."
               : task.description}
+              
           </Card.Text>
         </Card.Body>
       </Card>

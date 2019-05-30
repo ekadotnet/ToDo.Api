@@ -85,17 +85,9 @@ namespace ToDo.Core.Services
             _repository.Update(task);
         }
 
-        public void Delete(DeleteTaskDto deleteTaskDto)
+        public void Delete(int id)
         {
-            ToDoTask task = new ToDoTask()
-            {
-                Id = deleteTaskDto.Id,
-                Description = deleteTaskDto.Description,
-                DueDate = deleteTaskDto.DueDate,
-                IsCompleted = deleteTaskDto.IsCompleted,
-                Name = deleteTaskDto.Name
-            };
-            _repository.Delete(task.Id);
+            _repository.Delete(id);
         }
     }
 }
