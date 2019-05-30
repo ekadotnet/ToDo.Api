@@ -11,6 +11,9 @@ export default class TasksComponent extends React.Component {
       tasks: [],
       newTaskName: "",
       newTaskDescription: "",
+      updateTaskName: "",
+      updateTaskDescription: "",
+      updateTaskId: 0,
       validated: false,
       isFormValidated: false,
       modalShow: false,
@@ -31,6 +34,19 @@ export default class TasksComponent extends React.Component {
       });
     });
   }
+
+  updateTask = () => {
+    axios
+      .put("/todo", {
+        id: this.state.updateTaskId,
+        name: this.state.updateTaskName,
+        description: this.state.updateTaskDescription
+      }) //jeśli zakończyłeś dodawanie taska, pobierz wszysktkie i odśwież wlistę tasków
+      .then(() => {
+        this.getTasks();
+      });
+  };
+
 
   deleteTask = id => {
     axios
@@ -56,7 +72,7 @@ export default class TasksComponent extends React.Component {
 
   //Metoda się wykona z każdą zmianą w inpucie.  [e.target.name] odpowiada nazwie podanej pod "name" w Form.Control, np. name="newTaskName"
   onChange = e => {
-    console.log(e.target);
+    console.log(e.target.value);
     
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -72,7 +88,7 @@ export default class TasksComponent extends React.Component {
         style={{ width: "18rem", margin: "1rem"}}
       >
         <Card.Header className='card-header'>
-          <Card.Title className='card-title'>{task.name}</Card.Title>
+          <Card.Title className='card-title'>#{task.id} {task.name}</Card.Title>
           <Button variant="danger" onClick={() => {this.deleteTask(task.id)}}>X</Button>
         </Card.Header>
         <Card.Body className='card-body' onClick={() => {
@@ -143,6 +159,54 @@ export default class TasksComponent extends React.Component {
             show={this.state.modalShow}
             onHide={modalClose}
           />
+        </div>
+
+        <div id="updateTask">
+          <h1>Update Task:</h1>
+          <Form
+            id="updateTaskForm"
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+          >
+           <Form.Group>
+              <Form.Label>Id:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter id"
+                name="updateTaskId"
+                onChange={this.onChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Name:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                onChange={this.onChange}
+                name="updateTaskName"
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Description:</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows="5"
+                name="updateTaskDescription"
+                onChange={this.onChange}
+              />
+            </Form.Group>
+            <Button
+              variant="primary"
+              disabled={!this.state.updateTaskId }
+              onClick={this.updateTask}
+            >
+              Update
+            </Button>
+          </Form>
         </div>
       </div>
     );
